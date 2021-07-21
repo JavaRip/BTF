@@ -1,0 +1,4 @@
+extends: portsoc-ts
+root: true
+env:
+  browser: true

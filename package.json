@@ -1,0 +1,16 @@
+{
+  "name": "btf",
+  "version": "1.0.0",
+  "description": "diy neural network",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node dist-ts/script.js"
+  },
+  "author": "Kane Swartz",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^7.31.0",
+    "eslint-config-portsoc-ts": "^0.8.5"
+  }
+}
