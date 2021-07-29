@@ -18,15 +18,15 @@ class NeuralNetwork {
     this.hiddenToOutputWeights = this.matrixGenerator(this.outputNodes, this.hiddenNodes);
   }
 
-  train() {
+  train(): string {
     return '🏋️';
   }
 
-  query() {
+  query(): string {
     return '🧐';
   }
 
-  matrixGenerator(rows: number, cols: number) {
+  matrixGenerator(rows: number, cols: number): number[][] {
     const matrix: number[][] = [];
     for (let i = 0; i < cols; i += 1) {
       const columns: number[] = [];
@@ -37,11 +37,6 @@ class NeuralNetwork {
     }
     return matrix;
   }
-}
-
-function hello(meme: string) {
-  console.log(meme);
-  return 'string';
 }
 
 const neuralNetwork = new NeuralNetwork(3, 3, 3, 3);
