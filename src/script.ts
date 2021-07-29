@@ -44,7 +44,5 @@ function hello(meme: string) {
   return 'string';
 }
 
-const meme = 1234;
-console.log(hello(meme));
 const neuralNetwork = new NeuralNetwork(3, 3, 3, 3);
 console.log(neuralNetwork);
