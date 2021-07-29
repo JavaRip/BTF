@@ -14,8 +14,8 @@ class NeuralNetwork {
     this.learningRate = learningRate;
 
     // calculate random starting weight matrices
-    this.inputToHiddenWeights = this.matrixGenerator(this.hiddenNodes, this.inputNodes) as number[][];
-    this.hiddenToOutputWeights = this.matrixGenerator(this.outputNodes, this.hiddenNodes) as number[][];
+    this.inputToHiddenWeights = this.matrixGenerator(this.hiddenNodes, this.inputNodes);
+    this.hiddenToOutputWeights = this.matrixGenerator(this.outputNodes, this.hiddenNodes);
   }
 
   train() {
@@ -39,5 +39,12 @@ class NeuralNetwork {
   }
 }
 
+function hello(meme: string) {
+  console.log(meme);
+  return 'string';
+}
+
+const meme = 1234;
+console.log(hello(meme));
 const neuralNetwork = new NeuralNetwork(3, 3, 3, 3);
 console.log(neuralNetwork);

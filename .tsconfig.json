@@ -9,7 +9,6 @@
     "module": "es2020",
     "target": "es2020",
     "moduleResolution": "node",
-    "jsx": "react",
     "allowJs": false,
     "allowSyntheticDefaultImports": true
   },
