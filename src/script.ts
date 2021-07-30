@@ -15,7 +15,7 @@ class NeuralNetwork {
 
     // calculate random starting weight matrices
     this.inputToHiddenWeights = this.matrixGenerator(this.hiddenNodes, this.inputNodes);
-    this.hiddenToOutputWeights = this.matrixGenerator(this.outputNodes, this.hiddenNodes);
+    this.hiddenToOutputWeights = this.matrixGenerator(this.outputNodes, this.hiddenNodes, 0.5);
   }
 
   train(): string {
@@ -26,12 +26,12 @@ class NeuralNetwork {
     return '🧐';
   }
 
-  matrixGenerator(rows: number, cols: number): number[][] {
+  matrixGenerator(rows: number, cols: number, offset = 0, maxValue = 1): number[][] {
     const matrix: number[][] = [];
     for (let i = 0; i < cols; i += 1) {
       const columns: number[] = [];
       for (let j = 0; j < rows; j += 1) {
-        columns.push(Math.random());
+        columns.push(Math.random() * maxValue - offset);
       }
       matrix.push(columns);
     }
