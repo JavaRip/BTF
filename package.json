@@ -6,13 +6,15 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node dist-ts/script.js",
+    "dev": "npx ts-node src/script.ts",
     "build": "tsc --build .tsconfig.json"
   },
   "author": "Kane Swartz",
   "license": "MIT",
   "devDependencies": {
     "eslint": "^7.31.0",
-    "eslint-config-portsoc-ts": "^0.8.5"
+    "eslint-config-portsoc-ts": "^0.8.5",
+    "ts-node": "^10.1.0"
   },
   "eslintConfig": {
     "extends": "portsoc-ts",
@@ -27,5 +29,8 @@
     "rules": {
       "@typescript-eslint/explicit-function-return-type": 2
     }
+  },
+  "dependencies": {
+    "ml-matrix": "^6.8.0"
   }
 }
