@@ -1,12 +1,18 @@
+import { Matrix } from 'ml-matrix';
+
 class NeuralNetwork {
   inputNodes: number;
   hiddenNodes: number;
   outputNodes: number;
   learningRate: number;
-  inputToHiddenWeights: number[][];
-  hiddenToOutputWeights: number[][];
+  inputToHiddenWeights: Matrix;
+  hiddenToOutputWeights: Matrix;
+  boundMultiplyByRand: any;
 
   constructor(inputNodes: number, hiddenNodes: number, outputNodes: number, learningRate: number) {
+    // bound functions
+    this.boundMultiplyByRand = this.multiplyByRand.bind(this);
+
     // initial attributes
     this.inputNodes = inputNodes;
     this.hiddenNodes = hiddenNodes;
@@ -14,11 +20,14 @@ class NeuralNetwork {
     this.learningRate = learningRate;
 
     // calculate random starting weight matrices
-    this.inputToHiddenWeights = this.matrixGenerator(this.hiddenNodes, this.inputNodes);
-    this.hiddenToOutputWeights = this.matrixGenerator(this.outputNodes, this.hiddenNodes, 0.5);
+    this.inputToHiddenWeights = this.matrixFunc(Matrix.ones(this.hiddenNodes, this.inputNodes), this.boundMultiplyByRand, [-0.5, 1]);
+    this.hiddenToOutputWeights = this.matrixFunc(Matrix.ones(this.outputNodes, this.hiddenNodes), this.boundMultiplyByRand, [-0.5, 1]);
   }
 
-  train(): string {
+  train(input: Matrix): string {
+    // const hiddenInputs: Matrix = this.inputToHiddenWeights.mmul(input);
+    // const hiddenOutputs: Matrix =
+    console.log(input);
     return '🏋️';
   }
 
@@ -26,18 +35,27 @@ class NeuralNetwork {
     return '🧐';
   }
 
-  matrixGenerator(rows: number, cols: number, offset = 0, maxValue = 1): number[][] {
-    const matrix: number[][] = [];
-    for (let i = 0; i < cols; i += 1) {
-      const columns: number[] = [];
-      for (let j = 0; j < rows; j += 1) {
-        columns.push(Math.random() * maxValue - offset);
+  matrixFunc(matrix: Matrix, f: any, fParams: number[] = []): Matrix {
+    const newMatrix: number[][] = [];
+    for (let row = 0; row < matrix.rows; row += 1) {
+      const column: number[] = [];
+      for (let col = 0; col < matrix.columns; col += 1) {
+        column.push(f(matrix.get(row, col), ...fParams));
       }
-      matrix.push(columns);
+      newMatrix.push(column);
     }
-    return matrix;
+    return new Matrix(newMatrix);
+  }
+
+  multiplyByRand(x: number, offset: number, maxValue: number): number {
+    return x * Math.random() * maxValue + offset;
+  }
+
+  sigmoid(x: number): number {
+    return 1 / (1 + Math.exp(-x));
   }
 }
 
 const neuralNetwork = new NeuralNetwork(3, 3, 3, 3);
+neuralNetwork.matrixFunc(neuralNetwork.inputToHiddenWeights, console.log);
 console.log(neuralNetwork);
