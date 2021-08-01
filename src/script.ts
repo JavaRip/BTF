@@ -27,15 +27,19 @@ class NeuralNetwork {
     this.hidToOutWeights = this.matrixFunc(baseMatrix, this.boundTimesByRand, [-0.5, 1]);
   }
 
-  train(input: Matrix): string {
-    const hidIn: Matrix = this.inToHidWeights.mmul(input);
-    const hidOut: Matrix = this.matrixFunc(hidIn, this.boundSigmoid);
-    console.log(hidOut);
+  train(): string {
     return '🏋️';
   }
 
-  query(): string {
-    return '🧐';
+  query(input: Matrix): Matrix {
+    // calculate signals into hidden layer, then output of hidden layer
+    const hidIn: Matrix = this.inToHidWeights.mmul(input);
+    const hidOut: Matrix = this.matrixFunc(hidIn, this.boundSigmoid);
+
+    // calculate signals into output layer, then output of output layer
+    const outIn: Matrix = this.hidToOutWeights.mmul(hidOut);
+    const outOut: Matrix = this.matrixFunc(outIn, this.boundSigmoid);
+    return outOut;
   }
 
   matrixFunc(matrix: Matrix, f: (n: number, ...params: number[]) => number, fParams: number[] = []): Matrix {
@@ -60,4 +64,4 @@ class NeuralNetwork {
 }
 
 const neuralNetwork = new NeuralNetwork(3, 3, 3, 3);
-console.log(neuralNetwork);
+console.log(neuralNetwork.query(new Matrix([[1], [0.5], [-1.5]])));
