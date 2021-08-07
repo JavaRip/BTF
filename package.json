@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node dist-ts/script.js",
     "dev": "npx ts-node src/script.ts",
-    "build": "tsc --build .tsconfig.json"
+    "build": "tsc --build .tsconfig.json",
+    "bart": "npm run build && npm run start"
   },
   "author": "Kane Swartz",
   "license": "MIT",
@@ -32,5 +33,6 @@
   },
   "dependencies": {
     "ml-matrix": "^6.8.0"
-  }
+  },
+  "type": "module"
 }

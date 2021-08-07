@@ -29,30 +29,29 @@ class NeuralNetwork {
     this.learningRate = learningRate;
 
     // calculate random starting weight matrices
-    const baseInToHid = Matrix.ones(this.hidNodes, this.inNodes); // check hid and in are right way around
-    const baseHidToOut = Matrix.ones(this.outNodes, this.hidNodes);
+    // const baseInToHid = Matrix.ones(this.hidNodes, this.inNodes); // check hid and in are right way around
+    // const baseHidToOut = Matrix.ones(this.outNodes, this.hidNodes);
 
-    this.inToHidWeights = this.matrixFunc(baseInToHid, this.boundTimesByRand, [-0.5, 1]);
-    this.hidToOutWeights = this.matrixFunc(baseHidToOut, this.boundTimesByRand, [-0.5, 1]);
+    // this.inToHidWeights = this.matrixFunc(baseInToHid, this.boundTimesByRand, [-0.5, 1]);
+    this.inToHidWeights = new Matrix([[0.9, 0.8, 0.7], [0.6, 0.5, 0.4], [0.3, 0.2, 0.1]]);
+    console.log(this.inToHidWeights);
+    // this.hidToOutWeights = this.matrixFunc(baseHidToOut, this.boundTimesByRand, [-0.5, 1]);
+    this.hidToOutWeights = new Matrix([[0.1, 0.2, 0.3], [0.4, 0.5, 0.6], [0.7, 0.8, 0.9]]);
+    console.log(this.hidToOutWeights);
+    console.log('######################');
   }
 
   train(input: Matrix, target: Matrix): void {
-    console.log(input, target);
     const query = this.query(input);
     const outErr = Matrix.sub(target, query.outOut);
-    const hidErr = this.hidToOutWeights.mmul(outErr);
+    const hidErr = this.hidToOutWeights.transpose().mmul(outErr);
 
     const oneMinOut = Matrix.sub(Matrix.ones(this.outNodes, 1), query.outOut);
-    const outMulOneMinOut = query.outOut.mmul(oneMinOut);
-    const outTrans = query.outOut.transpose();
-    const deltaHidToOut = Matrix.mul(outErr.mmul(outTrans).mmul(outMulOneMinOut), this.learningRate);
-    Matrix.add(this.hidToOutWeights, deltaHidToOut);
-
-    const oneMinHidOut = Matrix.sub(Matrix.ones(this.hidNodes, 1), query.hidOut);
-    const hidOutMulOneMinHidOut = query.hidOut.mmul(oneMinHidOut);
-    const hidOutTrans = query.hidOut.transpose();
-    const deltaInToHid = Matrix.mul(hidErr.mmul(hidOutTrans).mmul(hidOutMulOneMinHidOut), this.learningRate);
-    Matrix.add(this.inToHidWeights, deltaInToHid);
+    const outMulOutErr = this.pyMultiply(outErr, query.outOut);
+    const minOutMulOutMulErr = this.pyMultiply(oneMinOut, outMulOutErr);
+    const deltaHidOut = minOutMulOutMulErr.mmul(query.hidOut.transpose());
+    const deltaHidOutMulLr = Matrix.mul(deltaHidOut, this.learningRate);
+    this.hidToOutWeights = Matrix.add(deltaHidOutMulLr, this.hidToOutWeights);
   }
 
   query(input: Matrix): queryState {
@@ -78,6 +77,15 @@ class NeuralNetwork {
     return new Matrix(newMatrix);
   }
 
+  // multiplies x,1 matrices as python would
+  pyMultiply(a: Matrix, b: Matrix): Matrix {
+    const temp: number[][] = [];
+    for (let i = 0; i < a.rows; i += 1) {
+      temp.push([a.get(i, 0) * b.get(i, 0)]);
+    }
+    return new Matrix(temp);
+  }
+
   timesByRand(x: number, offset: number, maxValue: number): number {
     return x * Math.random() * maxValue + offset;
   }
@@ -87,5 +95,11 @@ class NeuralNetwork {
   }
 }
 
-const neuralNetwork = new NeuralNetwork(3, 3, 3, 3);
-console.log(neuralNetwork.query(new Matrix([[1], [0.5], [-1.5]])));
+const neuralNetwork = new NeuralNetwork(3, 3, 3, 0.3);
+neuralNetwork.query(new Matrix([[1], [0.5], [-1.5]]));
+console.log('---------query complete-------------');
+neuralNetwork.train(new Matrix([[1], [0.5], [-1.5]]), new Matrix([[1], [2], [3]]));
+console.log('---------training complete-------------');
+neuralNetwork.query(new Matrix([[1], [0.5], [-1.5]]));
+console.log('---------query complete-------------');
+
